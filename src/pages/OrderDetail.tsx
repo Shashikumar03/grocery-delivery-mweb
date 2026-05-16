@@ -15,7 +15,7 @@ import { OrderStatusSelect } from '../components/OrderStatusSelect'
 import { PaymentInfo } from '../components/PaymentInfo'
 import { useApp } from '../context/AppContext'
 import type { DeliveryOrderStatus } from '../types'
-import { formatCurrency, formatTime } from '../utils/format'
+import { formatCurrency, formatDateTime } from '../utils/format'
 import {
   canMarkOrderCompleted,
   isOnlinePayment,
@@ -92,6 +92,11 @@ export function OrderDetail() {
         </div>
       </header>
 
+      <section className="card detail-section payment-section">
+        <h3 className="section-title">Payment</h3>
+        <PaymentInfo order={order} />
+      </section>
+
       {statusSuccess && (
         <div className="status-success-cta card" role="status">
           <CheckCircle2 size={28} />
@@ -141,17 +146,7 @@ export function OrderDetail() {
 
       <section className="card detail-section">
         <h2>{order.restaurant}</h2>
-        <p className="detail-time">Placed at {formatTime(order.placedAt)}</p>
-        <div className="detail-row">
-          <span>Payment mode</span>
-          <strong>{paymentTypeLabel(order.paymentType)}</strong>
-        </div>
-        {online && order.paymentStatus && (
-          <div className="detail-row">
-            <span>Payment status</span>
-            <PaymentStatusBadge status={order.paymentStatus} />
-          </div>
-        )}
+        <p className="detail-time">Placed at {formatDateTime(order.placedAt)}</p>
         <div className="detail-row">
           <span>Order value</span>
           <strong className="text-accent">{formatCurrency(order.amount)}</strong>
