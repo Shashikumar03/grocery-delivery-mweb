@@ -2,6 +2,23 @@ import type { OrderStatus } from '../types'
 
 const IST_TIMEZONE = 'Asia/Kolkata'
 
+/**
+ * API returns UTC datetimes without "Z" (e.g. 2026-05-16T10:49:01.029864).
+ * Parse as UTC, then format in IST for display.
+ */
+export function parseApiDateTime(iso: string): Date {
+  if (!iso?.trim()) return new Date()
+
+  const s = iso.trim()
+
+  if (/[Zz]$/.test(s) || /[+-]\d{2}:?\d{2}$/.test(s)) {
+    return new Date(s)
+  }
+
+  const normalized = s.includes('T') ? s : `${s}T00:00:00`
+  return new Date(`${normalized}Z`)
+}
+
 export function formatCurrency(amount: number): string {
   return `₹${amount.toLocaleString('en-IN')}`
 }
@@ -10,7 +27,7 @@ export function formatCurrency(amount: number): string {
 export function formatTime(iso: string): string {
   if (!iso) return ''
 
-  const time = new Date(iso).toLocaleTimeString('en-IN', {
+  const time = parseApiDateTime(iso).toLocaleTimeString('en-IN', {
     hour: '2-digit',
     minute: '2-digit',
     hour12: true,
@@ -25,7 +42,7 @@ export function formatDateTime(iso: string): string {
   if (!iso) return ''
 
   return (
-    new Date(iso).toLocaleString('en-IN', {
+    parseApiDateTime(iso).toLocaleString('en-IN', {
       day: 'numeric',
       month: 'short',
       year: 'numeric',

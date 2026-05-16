@@ -5,6 +5,7 @@ import type {
   PaymentType,
   TodayOrders,
 } from '../types'
+import { parseApiDateTime } from '../utils/format'
 
 type ApiRecord = Record<string, unknown>
 
@@ -177,7 +178,9 @@ export function mapGroceryOrder(order: ApiRecord, user: ApiRecord): Order {
 
 export function sortOrdersNewestFirst(orders: Order[]): Order[] {
   return [...orders].sort(
-    (a, b) => new Date(b.placedAt).getTime() - new Date(a.placedAt).getTime(),
+    (a, b) =>
+      parseApiDateTime(b.placedAt).getTime() -
+      parseApiDateTime(a.placedAt).getTime(),
   )
 }
 
