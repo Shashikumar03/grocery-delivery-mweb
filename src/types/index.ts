@@ -3,6 +3,8 @@ export type OrderStatus = 'PENDING' | 'COMPLETED' | 'CANCELLED'
 /** Statuses delivery partner can set via API */
 export type DeliveryOrderStatus = 'PENDING' | 'COMPLETED'
 
+export type PaymentType = 'cod' | 'online'
+
 export type PartnerStatus = 'online' | 'offline'
 
 export const DELIVERY_ORDER_STATUSES: DeliveryOrderStatus[] = ['PENDING', 'COMPLETED']
@@ -24,7 +26,9 @@ export interface Order {
   distanceKm: number
   status: OrderStatus
   placedAt: string
-  paymentType: 'cod' | 'prepaid'
+  paymentType: PaymentType
+  /** From paymentDto.paymentStatus — relevant for online orders */
+  paymentStatus: string | null
 }
 
 export interface TodayOrders {

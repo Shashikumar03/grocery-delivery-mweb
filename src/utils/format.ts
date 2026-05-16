@@ -17,3 +17,12 @@ export function statusLabel(status: OrderStatus | string): string {
   }
   return status
 }
+
+export function paymentStatusVariant(
+  status: string,
+): 'done' | 'pending' | 'failed' {
+  const s = status.toUpperCase()
+  if (s === 'COMPLETED' || s === 'SUCCESS' || s === 'CAPTURED') return 'done'
+  if (s === 'FAILED' || s === 'CANCELLED' || s === 'REFUNDED') return 'failed'
+  return 'pending'
+}

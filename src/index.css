@@ -225,6 +225,44 @@ input {
   color: #b91c1c;
 }
 
+.badge--payment {
+  font-size: 0.6875rem;
+}
+
+.badge--payment-done {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.badge--payment-pending {
+  background: #fef3c7;
+  color: #b45309;
+}
+
+.badge--payment-failed {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.order-card__payment {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 6px 0;
+  font-size: 0.75rem;
+  color: var(--slate-500);
+}
+
+.payment-block-banner {
+  margin-top: 12px;
+  text-align: left;
+  font-size: 0.8125rem;
+}
+
+.detail-row .badge {
+  margin-left: auto;
+}
+
 /* Bottom nav */
 .bottom-nav {
   position: fixed;

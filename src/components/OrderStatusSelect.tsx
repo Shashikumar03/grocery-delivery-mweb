@@ -3,6 +3,7 @@ import { DELIVERY_ORDER_STATUSES, type DeliveryOrderStatus } from '../types'
 
 interface OrderStatusSelectProps {
   value: DeliveryOrderStatus
+  canMarkCompleted: boolean
   disabled?: boolean
   saving?: boolean
   onChange: (status: DeliveryOrderStatus) => void
@@ -10,6 +11,7 @@ interface OrderStatusSelectProps {
 
 export function OrderStatusSelect({
   value,
+  canMarkCompleted,
   disabled,
   saving,
   onChange,
@@ -28,8 +30,15 @@ export function OrderStatusSelect({
           onChange={(e) => onChange(e.target.value as DeliveryOrderStatus)}
         >
           {DELIVERY_ORDER_STATUSES.map((status) => (
-            <option key={status} value={status}>
+            <option
+              key={status}
+              value={status}
+              disabled={status === 'COMPLETED' && !canMarkCompleted}
+            >
               {status}
+              {status === 'COMPLETED' && !canMarkCompleted
+                ? ' (payment pending)'
+                : ''}
             </option>
           ))}
         </select>

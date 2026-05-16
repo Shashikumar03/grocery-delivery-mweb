@@ -1,4 +1,10 @@
-import type { Order, OrderItem, OrderStatus, TodayOrders } from '../types'
+import type {
+  Order,
+  OrderItem,
+  OrderStatus,
+  PaymentType,
+  TodayOrders,
+} from '../types'
 
 type ApiRecord = Record<string, unknown>
 
@@ -102,7 +108,10 @@ function mapCartItems(order: ApiRecord): OrderItem[] {
   })
 }
 
-function mapPaymentMode(order: ApiRecord): 'cod' | 'prepaid' {
+function mapPayment(order: ApiRecord): {
+  paymentType: PaymentType
+  paymentStatus: string | null
+} {
   const payment = asRecord(order.paymentDto)
   const mode = (
     pickString(order, 'paymentMode') ||
@@ -110,8 +119,14 @@ function mapPaymentMode(order: ApiRecord): 'cod' | 'prepaid' {
     ''
   ).toUpperCase()
 
-  if (mode.includes('CASH') || mode.includes('COD')) return 'cod'
-  return 'prepaid'
+  const paymentStatus =
+    pickString(payment, 'paymentStatus') || null
+
+  if (mode.includes('CASH') || mode.includes('COD')) {
+    return { paymentType: 'cod', paymentStatus }
+  }
+
+  return { paymentType: 'online', paymentStatus }
 }
 
 function formatDropAddress(order: ApiRecord): string {
@@ -140,6 +155,8 @@ export function mapGroceryOrder(order: ApiRecord, user: ApiRecord): Order {
     pickNumber(payment, 'paymentAmount') ||
     0
 
+  const { paymentType, paymentStatus } = mapPayment(order)
+
   return {
     id: orderId ? String(orderId) : pickString(order, 'orderId'),
     restaurant: 'Grocery Order',
@@ -153,7 +170,8 @@ export function mapGroceryOrder(order: ApiRecord, user: ApiRecord): Order {
     distanceKm: 0,
     status: mapGroceryStatus(order),
     placedAt: pickString(order, 'orderTime') || new Date().toISOString(),
-    paymentType: mapPaymentMode(order),
+    paymentType,
+    paymentStatus,
   }
 }
 

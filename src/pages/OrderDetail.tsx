@@ -12,9 +12,15 @@ import { Badge } from '../components/Badge'
 import { Button } from '../components/Button'
 import { CopyableOrderId } from '../components/CopyableOrderId'
 import { OrderStatusSelect } from '../components/OrderStatusSelect'
+import { PaymentStatusBadge } from '../components/PaymentStatusBadge'
 import { useApp } from '../context/AppContext'
 import type { DeliveryOrderStatus } from '../types'
 import { formatCurrency, formatTime } from '../utils/format'
+import {
+  canMarkOrderCompleted,
+  isOnlinePayment,
+  paymentTypeLabel,
+} from '../utils/order'
 
 export function OrderDetail() {
   const { orderId } = useParams()
@@ -49,9 +55,20 @@ export function OrderDetail() {
     order.status === 'PENDING' || order.status === 'COMPLETED'
   const deliveryStatus: DeliveryOrderStatus =
     order.status === 'COMPLETED' ? 'COMPLETED' : 'PENDING'
+  const canComplete = canMarkOrderCompleted(order)
+  const online = isOnlinePayment(order)
 
   const handleStatusChange = async (status: DeliveryOrderStatus) => {
     if (status === order.status) return
+
+    if (status === 'COMPLETED' && !canComplete) {
+      setStatusError(
+        'Online payment must be COMPLETED before you can mark this delivery as completed.',
+      )
+      setStatusSuccess(null)
+      return
+    }
+
     setStatusError(null)
     setStatusSuccess(null)
     try {
@@ -100,11 +117,18 @@ export function OrderDetail() {
         <section className="card detail-section status-section">
           <OrderStatusSelect
             value={deliveryStatus}
+            canMarkCompleted={canComplete}
             saving={saving}
             onChange={handleStatusChange}
           />
           {statusError && <p className="status-error">{statusError}</p>}
-          {!statusSuccess && (
+          {online && !canComplete && !statusSuccess && (
+            <div className="banner banner--warning payment-block-banner">
+              Payment status is <strong>{order.paymentStatus ?? 'pending'}</strong>.
+              Delivery can be marked COMPLETED only after online payment is COMPLETED.
+            </div>
+          )}
+          {!statusSuccess && canComplete && (
             <p className="status-hint">
               Set to <strong>COMPLETED</strong> after the order is delivered.
             </p>
@@ -120,9 +144,15 @@ export function OrderDetail() {
         <h2>{order.restaurant}</h2>
         <p className="detail-time">Placed at {formatTime(order.placedAt)}</p>
         <div className="detail-row">
-          <span>Payment</span>
-          <strong>{order.paymentType === 'cod' ? 'Cash on delivery' : 'Prepaid'}</strong>
+          <span>Payment mode</span>
+          <strong>{paymentTypeLabel(order.paymentType)}</strong>
         </div>
+        {online && order.paymentStatus && (
+          <div className="detail-row">
+            <span>Payment status</span>
+            <PaymentStatusBadge status={order.paymentStatus} />
+          </div>
+        )}
         <div className="detail-row">
           <span>Order value</span>
           <strong className="text-accent">{formatCurrency(order.amount)}</strong>
