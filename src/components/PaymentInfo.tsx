@@ -10,11 +10,13 @@ interface PaymentInfoProps {
 
 export function PaymentInfo({ order, compact = false }: PaymentInfoProps) {
   const online = isOnlinePayment(order)
+  const modeLabel = paymentTypeLabel(order.paymentType)
 
   if (compact) {
     return (
       <div className="payment-info payment-info--compact">
-        <span className="payment-info__mode">{paymentTypeLabel(order.paymentType)}</span>
+        <span className="payment-info__compact-label">Payment mode</span>
+        <span className="payment-info__mode">{modeLabel}</span>
         {online && order.paymentStatus && (
           <PaymentStatusBadge status={order.paymentStatus} />
         )}
@@ -26,7 +28,7 @@ export function PaymentInfo({ order, compact = false }: PaymentInfoProps) {
     <div className="payment-info">
       <div className="payment-info__row">
         <span className="payment-info__label">Payment mode</span>
-        <strong className="payment-info__mode">{paymentTypeLabel(order.paymentType)}</strong>
+        <strong className="payment-info__mode">{modeLabel}</strong>
       </div>
       {online && order.paymentStatus && (
         <div className="payment-info__row">
