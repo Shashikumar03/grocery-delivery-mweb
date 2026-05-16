@@ -2,10 +2,9 @@ import { ChevronRight, MapPin, IndianRupee } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import type { Order } from '../types'
 import { formatCurrency, formatTime } from '../utils/format'
-import { isOnlinePayment } from '../utils/order'
 import { Badge } from './Badge'
 import { CopyableOrderId } from './CopyableOrderId'
-import { PaymentStatusBadge } from './PaymentStatusBadge'
+import { PaymentInfo } from './PaymentInfo'
 
 export function OrderCard({ order }: { order: Order }) {
   return (
@@ -18,12 +17,7 @@ export function OrderCard({ order }: { order: Order }) {
         <Badge status={order.status} />
       </div>
       <p className="order-card__customer">{order.customerName}</p>
-      {isOnlinePayment(order) && order.paymentStatus && (
-        <div className="order-card__payment">
-          <span>Payment:</span>
-          <PaymentStatusBadge status={order.paymentStatus} />
-        </div>
-      )}
+      <PaymentInfo order={order} compact />
       <div className="order-card__meta">
         {order.distanceKm > 0 && (
           <span>

@@ -244,13 +244,50 @@ input {
   color: #b91c1c;
 }
 
-.order-card__payment {
+.payment-info {
   display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 0;
+  border-top: 1px solid var(--slate-100);
+  border-bottom: 1px solid var(--slate-100);
+  margin: 8px 0;
+}
+
+.payment-info--compact {
+  flex-direction: row;
+  flex-wrap: wrap;
   align-items: center;
   gap: 8px;
-  margin: 6px 0;
-  font-size: 0.75rem;
+  padding: 0;
+  margin: 8px 0;
+  border: none;
+}
+
+.payment-info__row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.payment-info__label {
+  font-size: 0.875rem;
   color: var(--slate-500);
+}
+
+.payment-info__mode {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--slate-900);
+}
+
+.payment-info--compact .payment-info__mode {
+  font-size: 0.75rem;
+  padding: 4px 10px;
+  background: var(--slate-100);
+  border-radius: 6px;
+  color: var(--slate-700);
 }
 
 .payment-block-banner {

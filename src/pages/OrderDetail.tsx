@@ -12,14 +12,13 @@ import { Badge } from '../components/Badge'
 import { Button } from '../components/Button'
 import { CopyableOrderId } from '../components/CopyableOrderId'
 import { OrderStatusSelect } from '../components/OrderStatusSelect'
-import { PaymentStatusBadge } from '../components/PaymentStatusBadge'
+import { PaymentInfo } from '../components/PaymentInfo'
 import { useApp } from '../context/AppContext'
 import type { DeliveryOrderStatus } from '../types'
 import { formatCurrency, formatTime } from '../utils/format'
 import {
   canMarkOrderCompleted,
   isOnlinePayment,
-  paymentTypeLabel,
 } from '../utils/order'
 
 export function OrderDetail() {

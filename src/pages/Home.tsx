@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { Badge } from '../components/Badge'
 import { Button } from '../components/Button'
 import { CopyableOrderId } from '../components/CopyableOrderId'
+import { PaymentInfo } from '../components/PaymentInfo'
 import { useApp } from '../context/AppContext'
 
 export function Home() {
@@ -70,6 +71,7 @@ export function Home() {
             <CopyableOrderId orderId={activeOrder.id} size="sm" className="active-order__id" />
             <h3>{activeOrder.restaurant}</h3>
             <p className="active-order__customer">{activeOrder.customerName}</p>
+            <PaymentInfo order={activeOrder} compact />
             <div className="active-order__route">
               <span className="route-dot route-dot--drop" />
               <p>{activeOrder.dropAddress}</p>
